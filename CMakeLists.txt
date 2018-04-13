@@ -16,6 +16,4 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
   message (FATAL_ERROR "Blowbox must be built as a 64 bit project so you should use a 64 bit compiler when configuring through CMake.")
 endif(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-set (BLOWBOX_BUILD_EDITOR OFF CACHE BOOL "If enabled, the blowbox editor will be added to the solution.")
-
 add_subdirectory("src")
