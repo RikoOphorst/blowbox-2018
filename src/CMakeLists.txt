@@ -4,7 +4,7 @@ set (BLOWBOX_IS_BUILDING_SCRIPTING  ON)
 set (BLOWBOX_IS_BUILDING_BUILDER    ON)
 set (BLOWBOX_IS_BUILDING_ENGINE     ON)
 set (BLOWBOX_IS_BUILDING_CLIENT     ON)
-set (BLOWBOX_IS_BUILDING_EDITOR     OFF)
+set (BLOWBOX_IS_BUILDING_EDITOR     ON)
 
 #set (BLOWBOX_BUILD_CORE       ON CACHE BOOL   "If enabled, the blowbox core project will be added to the solution. Disabling this will cause the following projects not to be added: GRAPHICS, SCRIPTING, BUILDER, ENGINE, CLIENT, EDITOR." INTERNAL)
 set (BLOWBOX_BUILD_CORE       ON)

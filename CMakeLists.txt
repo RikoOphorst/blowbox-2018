@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.9)
+cmake_minimum_required (VERSION 3.11)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(blowbox)
@@ -16,4 +16,17 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
   message (FATAL_ERROR "Blowbox must be built as a 64 bit project so you should use a 64 bit compiler when configuring through CMake.")
 endif(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
 
+# This function set_solution_folder is courtesy of Daniel Konings http://www.danielkonings.com/
+function (set_solution_folder arg1)
+  if (MSVC)
+    set(SolutionFolder "${arg1}")
+    foreach (Target ${ARGV})
+      if (NOT "${Target}" STREQUAL "${SolutionFolder}")
+        set_target_properties("${Target}" PROPERTIES FOLDER "${SolutionFolder}")
+      endif ()
+    endforeach ()
+  endif (MSVC)
+endfunction (set_solution_folder)
+
+add_subdirectory("deps")
 add_subdirectory("src")
