@@ -69,7 +69,10 @@ target_link_libraries(idirectx11 INTERFACE ${DirectX11_LIBRARIES})
 target_include_directories(idirectx11 INTERFACE ${DirectX11_INCLUDE_DIRS})
 
 # Qt
-find_package(Qt5Widgets REQUIRED)
+FIND_PACKAGE(Qt5 COMPONENTS Widgets REQUIRED)
+IF (NOT Qt5_FOUND)
+  MESSAGE(FATAL_ERROR "In order to build the tools projects, Qt5 needs to be installed on the system")
+ENDIF ()
 
 # Mono
 find_package(Mono REQUIRED)

@@ -7,9 +7,10 @@ source_group("editor" FILES ${EditorFiles})
 
 add_executable(blowbox-editor ${EditorFiles})
 
-target_link_libraries(blowbox-editor 
+target_link_libraries(blowbox-editor PRIVATE
   blowbox-core 
   blowbox-engine
+  Qt5Widgets
 )
 
 target_include_directories(blowbox-editor PRIVATE 

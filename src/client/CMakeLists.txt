@@ -7,7 +7,7 @@ source_group("client" FILES ${ClientFiles})
 
 add_executable(blowbox-client ${ClientFiles})
 
-target_link_libraries(blowbox-client 
+target_link_libraries(blowbox-client PRIVATE
   blowbox-core 
   blowbox-engine
 )
