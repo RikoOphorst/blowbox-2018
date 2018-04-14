@@ -7,7 +7,12 @@ source_group("builder" FILES ${BuilderFiles})
 
 add_library(blowbox-builder STATIC ${BuilderFiles})
 
-target_link_libraries(blowbox-builder blowbox-core)
-target_include_directories(blowbox-builder PRIVATE "${CMAKE_SOURCE_DIR}/src/core")
+target_link_libraries(blowbox-builder PRIVATE
+  blowbox-core
+  idirectx11
+  assimp
+)
 
-target_link_libraries(blowbox-builder iassimp)
+target_include_directories(blowbox-builder PRIVATE 
+  "${CMAKE_SOURCE_DIR}/src/core"
+)

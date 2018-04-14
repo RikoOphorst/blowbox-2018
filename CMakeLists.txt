@@ -25,17 +25,6 @@ set(CMAKE_PREFIX_PATH "" CACHE PATH "CMAKE_PREFIX_PATH")
 # Enable treat warnings as error
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
 
-# This function set_solution_folder is courtesy of Daniel Konings http://www.danielkonings.com/
-function (set_solution_folder arg1)
-  if (MSVC)
-    set(SolutionFolder "${arg1}")
-    foreach (Target ${ARGV})
-      if (NOT "${Target}" STREQUAL "${SolutionFolder}")
-        set_target_properties("${Target}" PROPERTIES FOLDER "${SolutionFolder}")
-      endif ()
-    endforeach ()
-  endif (MSVC)
-endfunction (set_solution_folder)
-
+include("cmake/SetSolutionFolder.cmake")
 add_subdirectory("deps")
 add_subdirectory("src")
