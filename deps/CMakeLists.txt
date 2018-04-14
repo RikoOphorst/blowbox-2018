@@ -62,6 +62,25 @@ set_solution_folder(
   zlibstatic
 )
 
+# LuaJIT
+set(LUAJIT_LIBRARY_NAMES
+  lua51
+  luajit
+  minilua
+)
+
+foreach(CURRENT_LIB_NAME ${LUAJIT_LIBRARY_NAMES})
+  if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/luajit/src/${CURRENT_LIB_NAME}.lib")
+    set(LUAJIT_LIBRARIES ${LUAJIT_LIBRARIES} "${CMAKE_CURRENT_SOURCE_DIR}/luajit/src/${CURRENT_LIB_NAME}.lib")
+  else()
+    message (FATAL_ERROR "Could not find ${CURRENT_LIB_NAME}.lib in order to add LuaJIT. Did you build luajit? Run deps/luajit/src/msvcbuild.bat in a x64 Visual Studio Command Prompt and try running cmake again.")
+  endif ()
+endforeach ()
+
+add_library(iluajit INTERFACE)
+target_link_libraries(iluajit INTERFACE "${LUAJIT_LIBRARIES}")
+target_include_directories(iluajit INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/luajit/src")
+
 # DirectX 11
 find_package(DirectX REQUIRED)
 add_library(idirectx11 INTERFACE)
@@ -69,10 +88,10 @@ target_link_libraries(idirectx11 INTERFACE ${DirectX11_LIBRARIES})
 target_include_directories(idirectx11 INTERFACE ${DirectX11_INCLUDE_DIRS})
 
 # Qt
-FIND_PACKAGE(Qt5 COMPONENTS Widgets REQUIRED)
-IF (NOT Qt5_FOUND)
-  MESSAGE(FATAL_ERROR "In order to build the tools projects, Qt5 needs to be installed on the system")
-ENDIF ()
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+if (NOT Qt5_FOUND)
+  message(FATAL_ERROR "Could not find Qt. Please add a path to the 5.10.1/msvc2017_64 folder of your personal Qt installation.")
+endif ()
 
 # Mono
 find_package(Mono REQUIRED)
