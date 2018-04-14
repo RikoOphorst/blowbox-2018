@@ -87,11 +87,5 @@ add_library(idirectx11 INTERFACE)
 target_link_libraries(idirectx11 INTERFACE ${DirectX11_LIBRARIES})
 target_include_directories(idirectx11 INTERFACE ${DirectX11_INCLUDE_DIRS})
 
-# Qt
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-if (NOT Qt5_FOUND)
-  message(FATAL_ERROR "Could not find Qt. Please add a path to the 5.10.1/msvc2017_64 folder of your personal Qt installation.")
-endif ()
-
 # Mono
 find_package(Mono REQUIRED)
