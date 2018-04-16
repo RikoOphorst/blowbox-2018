@@ -1,4 +1,6 @@
-#include "editor/ui/main_window.h"
+#include "editor/main_window.h"
+
+#include <filesystem/path.h>
 
 #include <QtWidgets/qapplication.h>
 

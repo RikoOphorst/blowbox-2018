@@ -42,6 +42,10 @@ set_solution_folder(
 # Assimp
 set (ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
 set (ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set (BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set (ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set (ASSIMP_INSTALL_PDB OFF CACHE BOOL "" FORCE)
+set (ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
 set (ASSIMP_BUILD_OBJ_IMPORTER ON CACHE BOOL "" FORCE)
 set (ASSIMP_BUILD_FBX_IMPORTER ON CACHE BOOL "" FORCE)
 set (ASSIMP_BUILD_OPENGEX_IMPORTER ON CACHE BOOL "" FORCE)
@@ -55,7 +59,6 @@ target_include_directories(iassimp INTERFACE "assimp/include")
 set_solution_folder(
   "deps/assimp"
   assimp
-  assimp_cmd
   IrrXML
   UpdateAssimpLibsDebugSymbolsAndDLLs
   zlib
@@ -87,5 +90,6 @@ add_library(idirectx11 INTERFACE)
 target_link_libraries(idirectx11 INTERFACE ${DirectX11_LIBRARIES})
 target_include_directories(idirectx11 INTERFACE ${DirectX11_INCLUDE_DIRS})
 
-# Mono
-find_package(Mono REQUIRED)
+# Filesystem
+add_library(ifilesystem INTERFACE)
+target_include_directories(ifilesystem INTERFACE "filesystem")

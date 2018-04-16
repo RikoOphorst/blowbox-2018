@@ -10,4 +10,5 @@ add_library(blowbox-core STATIC ${CoreFiles})
 target_link_libraries(blowbox-core PUBLIC 
   ieastl 
   iglm
+  ifilesystem
 )
