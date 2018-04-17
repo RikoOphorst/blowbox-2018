@@ -36,14 +36,19 @@ add_executable(blowbox-editor
 target_link_libraries(blowbox-editor PRIVATE
   blowbox-core 
   blowbox-engine
+  blowbox-scripting
+  blowbox-graphics
   blowbox-builder
   Qt5::Widgets
 )
 
 target_include_directories(blowbox-editor PRIVATE 
+  "${CMAKE_SOURCE_DIR}/src/core"
+  "${CMAKE_SOURCE_DIR}/src/scripting"
+  "${CMAKE_SOURCE_DIR}/src/graphics"
+  "${CMAKE_SOURCE_DIR}/src/builder"
   "${CMAKE_SOURCE_DIR}/src/engine" 
   "${CMAKE_SOURCE_DIR}/src/editor"
-  "${CMAKE_SOURCE_DIR}/src/builder"
 )
 
 set(CMAKE_AUTOUIC OFF)

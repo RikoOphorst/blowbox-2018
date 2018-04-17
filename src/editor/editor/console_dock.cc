@@ -1,5 +1,8 @@
 #include "console_dock.h"
 
+#include "core/logger.h"
+
+#include <qapplication.h>
 #include <qmainwindow.h>
 #include <qdockwidget.h>
 #include <qwidget.h>
@@ -34,13 +37,30 @@ namespace blowbox
       console_input_(console_input),
       submit_button_(submit_button)
     {
-      
+      console_view_->setFont(QFont(QStringLiteral("Consolas"), 9, 400, false));
+
+      core::Logger::message_receiver = &MessageReceiver;
+      core::Logger::message_receiver_userdata = this;
     }
 
     //------------------------------------------------------------------------------------------------------
     ConsoleDock::~ConsoleDock()
     {
       
+    }
+    
+    //------------------------------------------------------------------------------------------------------
+    void ConsoleDock::MessageReceiver(void* userdata, const core::Message& message)
+    {
+      ConsoleDock* console_dock = reinterpret_cast<ConsoleDock*>(userdata);
+
+      console_dock->ProcessMessage(message);
+    }
+    
+    //------------------------------------------------------------------------------------------------------
+    void ConsoleDock::ProcessMessage(const core::Message& message)
+    {
+      console_view_->append(QString(message.message));
     }
   }
 }

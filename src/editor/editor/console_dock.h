@@ -13,6 +13,11 @@ class QPushButton;
 
 namespace blowbox
 {
+  namespace core
+  {
+    struct Message;
+  }
+
   namespace editor
   {
     class ConsoleDock
@@ -29,6 +34,11 @@ namespace blowbox
         QPushButton* submit_button
       );
       ~ConsoleDock();
+
+    private:
+      static void MessageReceiver(void* user_data, const core::Message& message);
+
+      void ProcessMessage(const core::Message& message);
 
     private:
       QWidget* dock_contents_;

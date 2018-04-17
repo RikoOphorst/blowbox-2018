@@ -1,14 +1,18 @@
 #include "editor/main_window.h"
 
-#include <filesystem/path.h>
+#include "core/core.h"
+#include "core/logger.h"
 
 #include <QtWidgets/qapplication.h>
 
+using namespace blowbox;
+
 int main(int argc, char** argv)
 {
+  core::Core blowbox_core = core::Core(argc, argv);
   QApplication app(argc, argv);
 
-  blowbox::editor::MainWindow* window = new blowbox::editor::MainWindow(&app);
+  editor::MainWindow* window = new editor::MainWindow(&app);
 
   window->show();
 
