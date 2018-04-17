@@ -1,20 +1,32 @@
 #include "engine.h"
 
+#include "core/logger.h"
+
 namespace blowbox
 {
   namespace engine
   {
+    Engine* Engine::instance_ = nullptr;
+
     //------------------------------------------------------------------------------------------------------
     Engine::Engine(int argc, char** argv) :
       is_running_(false)
     {
+      core::Logger::Assert(instance_ == nullptr, "Tried creating a second Engine instance which is not supported.");
 
+      instance_ = this;
     }
     
     //------------------------------------------------------------------------------------------------------
     Engine::~Engine()
     {
 
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    Engine& Engine::Instance()
+    {
+      return *instance_;
     }
     
     //------------------------------------------------------------------------------------------------------

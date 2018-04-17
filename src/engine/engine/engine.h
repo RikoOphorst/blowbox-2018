@@ -25,6 +25,8 @@ namespace blowbox
       Engine(int argc, char** argv);
       ~Engine();
 
+      static Engine& Instance();
+
       void Run();
       void Shutdown();
 
@@ -81,6 +83,8 @@ namespace blowbox
       CallbackOnPostRender  callback_on_post_render_;
       CallbackOnEndFrame    callback_on_end_frame_;
       CallbackOnShutdown    callback_on_shutdown_;
+
+      static Engine* instance_;
     };
   }
 }
