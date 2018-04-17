@@ -39,6 +39,17 @@ namespace blowbox
       main_window_ = new Ui::MainWindow();
       main_window_->setupUi(this);
 
+      console_dock_ = new ConsoleDock(
+        main_window_->console_dock_contents,
+        main_window_->channels_filter,
+        main_window_->logs_checkbox,
+        main_window_->warnings_checkbox,
+        main_window_->errors_checkbox,
+        main_window_->console_view,
+        main_window_->console_input,
+        main_window_->console_submit
+      );
+
       RestoreLayout();
     }
 
