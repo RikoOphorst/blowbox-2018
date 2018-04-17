@@ -3,31 +3,44 @@
 #include <qdockwidget.h>
 
 class QWidget;
-class QGridLayout;
+class QBoxLayout;
 class QTextBrowser;
 class QCheckBox;
-class QPlainTextEdit;
+class QTextEdit;
+class QSplitter;
+class QComboBox;
+class QPushButton;
 
 namespace blowbox
 {
   namespace editor
   {
-    class ConsoleDock : public QDockWidget
+    class ConsoleDock
     {
     public:
-      ConsoleDock(QMainWindow* main_window);
+      ConsoleDock(
+        QWidget* contents, 
+        QComboBox* channels_filter, 
+        QCheckBox* logs_checkbox, 
+        QCheckBox* warnings_checkbox, 
+        QCheckBox* errors_checkbox,
+        QTextBrowser* console_view,
+        QTextEdit* console_input,
+        QPushButton* submit_button
+      );
       ~ConsoleDock();
 
     private:
       QWidget* dock_contents_;
-      QGridLayout* dock_layout_;
       QTextBrowser* console_view_;
 
-      QCheckBox* show_logs_checkbox_;
-      QCheckBox* show_warnings_checkbox_;
-      QCheckBox* show_errors_checkbox_;
+      QComboBox* channels_filter_;
+      QCheckBox* logs_checkbox_;
+      QCheckBox* warnings_checkbox_;
+      QCheckBox* errors_checkbox_;
 
-      QPlainTextEdit* console_input_;
+      QTextEdit* console_input_;
+      QPushButton* submit_button_;
     };
   }
 }

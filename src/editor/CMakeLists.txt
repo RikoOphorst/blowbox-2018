@@ -9,11 +9,13 @@ endif()
 file(GLOB EditorFiles 
   editor/*.h
   editor/*.cc
+  editor/*.ui
 )
 
 file(GLOB EditorWindowsFiles
   editor/windows/*.h
   editor/windows/*.cc
+  editor/windows/*.ui
 )
 
 file(GLOB QRCFiles

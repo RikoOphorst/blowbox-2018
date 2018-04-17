@@ -3,11 +3,11 @@
 #include <qmainwindow.h>
 
 class QApplication;
-class QMenuBar;
-class QMenu;
-class QWidget;
-class QGridLayout;
-class QCloseEvent;
+
+namespace Ui
+{
+  class MainWindow;
+}
 
 namespace blowbox
 {
@@ -20,25 +20,19 @@ namespace blowbox
 
     class MainWindow : public QMainWindow
     {
-      Q_OBJECT
     public:
       MainWindow(QApplication* app); 
       ~MainWindow();
 
-      void closeEvent(QCloseEvent* evt);
+      void SaveLayout();
+      void RestoreLayout();
+
+    public:
+      void closeEvent(QCloseEvent* evt) override;
 
     private:
+      Ui::MainWindow* main_window_;
       QApplication* app_;
-
-      QMenuBar* menubar_;
-      QMenu* menu_file_;
-      QMenu* menu_edit_;
-      QMenu* menu_assets_;
-
-      QWidget* central_widget_;
-      QWidget* grid_layout_widget_;
-      QGridLayout* central_layout_;
-      QWidget* render_view_;
 
       HierarchyDock* hierarchy_dock_;
       AssetsDock* assets_dock_;
