@@ -6,7 +6,6 @@
 #include "core/data/queue.h"
 #include "core/data/string.h"
 
-#include <glm/vec4.hpp>
 #include <chrono>
 
 namespace blowbox
@@ -36,7 +35,7 @@ namespace blowbox
 
     struct Message
     {
-      std::chrono::time_point<std::chrono::high_resolution_clock> time_stamp;
+      std::chrono::time_point<std::chrono::system_clock> time_stamp;
       MessageType type;
       MessageSource source;
       char message[1024];
@@ -104,7 +103,7 @@ namespace blowbox
     {
       Message msg;
 
-      msg.time_stamp = std::chrono::high_resolution_clock::now();
+      msg.time_stamp = std::chrono::system_clock::now();
       msg.type = type;
       msg.source = source;
       

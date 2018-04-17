@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/data/string.h"
+
 #include <qdockwidget.h>
 
 class QWidget;
@@ -10,11 +12,15 @@ class QTextEdit;
 class QSplitter;
 class QComboBox;
 class QPushButton;
+class QTextCharFormat;
 
 namespace blowbox
 {
+
+
   namespace core
   {
+    enum class MessageType;
     struct Message;
   }
 
@@ -24,11 +30,7 @@ namespace blowbox
     {
     public:
       ConsoleDock(
-        QWidget* contents, 
-        QComboBox* channels_filter, 
-        QCheckBox* logs_checkbox, 
-        QCheckBox* warnings_checkbox, 
-        QCheckBox* errors_checkbox,
+        QWidget* contents,
         QTextBrowser* console_view,
         QTextEdit* console_input,
         QPushButton* submit_button
@@ -40,14 +42,13 @@ namespace blowbox
 
       void ProcessMessage(const core::Message& message);
 
+      void ParseTimeStamp(const std::chrono::time_point<std::chrono::system_clock>& time, String* out_parsed_time);
+
+      QTextCharFormat GetCharFormatByMessageType(const core::MessageType& type);
+
     private:
       QWidget* dock_contents_;
       QTextBrowser* console_view_;
-
-      QComboBox* channels_filter_;
-      QCheckBox* logs_checkbox_;
-      QCheckBox* warnings_checkbox_;
-      QCheckBox* errors_checkbox_;
 
       QTextEdit* console_input_;
       QPushButton* submit_button_;

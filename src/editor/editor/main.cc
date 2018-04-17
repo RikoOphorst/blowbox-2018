@@ -14,6 +14,13 @@ int main(int argc, char** argv)
 
   editor::MainWindow* window = new editor::MainWindow(&app);
 
+  for (int i = 0; i < 100; i++)
+  {
+    core::Logger::Log(core::MessageSource::Editor, "This is a log");
+    core::Logger::Warn(core::MessageSource::Editor, "This is a warning");
+    core::Logger::Error(core::MessageSource::Editor, "This is a error");
+  }
+
   window->show();
 
   return app.exec();
