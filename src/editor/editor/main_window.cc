@@ -3,6 +3,8 @@
 #include "editor/console_dock.h"
 #include "ui_main_window.h"
 
+#include <engine/engine.h>
+
 #include <qapplication.h>
 #include <qfile.h>
 #include <qtextstream.h>
@@ -77,6 +79,7 @@ namespace blowbox
     void MainWindow::closeEvent(QCloseEvent *event)
     {
       SaveLayout();
+      engine::Engine::Instance().Shutdown();
     }
   }
 }
