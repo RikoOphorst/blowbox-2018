@@ -6,15 +6,13 @@ namespace blowbox
   {
     class Core
     {
-    protected:
-      Core();
+    public:
+      Core(int argc, char** argv);
       ~Core();
 
-    public:
       static Core* Instance();
-
     private:
-
+      static Core* instance_;
     };
   }
 }
