@@ -3,8 +3,6 @@
 #include "core/memory/allocators/malloc_allocator.h"
 #include "core/memory/allocators/eastl_allocator.h"
 
-#include <EASTL/memory.h>
-
 #include <EASTL/shared_ptr.h>
 #include <EASTL/unique_ptr.h>
 
@@ -56,24 +54,28 @@ namespace blowbox
       void operator()(T* ptr);
     };
 
-    /**
-    * @brief An EASTL unique_ptr with a custom allocator
-    *
-    * @tparam T The type stored underneath this pointer
-    *
-    * @see MemoryDeleter<T>
-    */
-    template <typename T>
-    using UniquePtr = eastl::unique_ptr<T, MemoryDeleter<T>>;
+  }
 
-    /**
-    * @brief An EASTL shared_ptr with a custom allocator
-    *
-    * @tparam T The type stored underneath this pointer
-    */
-    template <typename T>
-    using SharedPtr = eastl::shared_ptr<T>;
+  /**
+  * @brief An EASTL unique_ptr with a custom allocator
+  *
+  * @tparam T The type stored underneath this pointer
+  *
+  * @see MemoryDeleter<T>
+  */
+  template <typename T>
+  using UniquePtr = eastl::unique_ptr<T, core::MemoryDeleter<T>>;
 
+  /**
+  * @brief An EASTL shared_ptr with a custom allocator
+  *
+  * @tparam T The type stored underneath this pointer
+  */
+  template <typename T>
+  using SharedPtr = eastl::shared_ptr<T>;
+
+  namespace core
+  {
     /**
     * @brief The memory interface to be used throughout the engine
     *
