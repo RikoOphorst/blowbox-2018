@@ -73,3 +73,22 @@ Blowbox-client is a layer on top of the blowbox-engine and functions as the exec
 ### blowbox-editor
 This is also a layer on top of the engine, however this also includes the entire editor suite built with Qt. Obviously it depends on blowbox-engine and is obviously built as an executable.
 
+## Deployment
+Deployment tools will be created later on for blowbox, but for now, here's some basic explanations.
+
+### Deploying Blowbox Client
+Well, this has currently not been tested. It will probably work out of the box, but yeah, you'll have to figure that one out yourself for the time being.
+
+### Deployiong Blowbox Editor
+This has also not been fully tested, but one thing that you should 100% do is running Qt's `windeployqt.exe` on the `blowbox-editor.exe` that you want to deploy.
+
+`windeployqt.exe` is located in your Qt's installation directory under `<qtfolder>/5.10.1/msvc2017_64/bin/`. Open that folder in a command prompt or equivalant. Then run the following command:
+
+`windeployqt.exe <PATHTOTHEBLOWBOXEDITOREXE>`
+
+So something like this:
+
+`windeployqt.exe D:/Projects/blowbox-2018/bin/bin/Release/blowbox-editor.exe`
+
+## Other things..
+Not much more needs to be mentioned besides this. glhf
