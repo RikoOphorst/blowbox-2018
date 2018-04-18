@@ -2,11 +2,13 @@
 
 #include <EASTL/functional.h>
 
-#define BLOWBOX_CALL_FUNCTION_SAFELY(func, ...) if (func) { func(##__VA_ARGS__); }
-
 namespace blowbox
 {
-  //------------------------------------------------------------------------------------------------------
+  /**
+  * @brief Executes an eastl::function safely by checking whether it is set before it is called.
+  * @tparam T The EASTL function you want to call, e.g. eastl::function<void(int)>
+  * @tparam Args Variadic number of arguments that will be passed in directly to the function call.
+  */
   template<typename T, typename ... Args>
   inline void ExecuteCallbackSafely(const T& callback, Args&&... arguments)
   {
