@@ -1,6 +1,4 @@
-#include "editor.h"
-
-#include "editor/main_window.h"
+#include "client_runtime.h"
 
 #include <core/logger.h>
 #include <core/memory/memory.h>
@@ -8,14 +6,12 @@
 
 namespace blowbox
 {
-  namespace editor
+  namespace client
   {
     //------------------------------------------------------------------------------------------------------
-    Editor::Editor(int argc, char** argv) :
-      app_(argc, argv)
+    ClientRuntime::ClientRuntime(int argc, char** argv)
     {
       engine_ = core::Memory::Construct<engine::Engine>(&core::Memory::default_allocator(), argc, argv);
-      main_window_ = core::Memory::Construct<MainWindow>(&core::Memory::default_allocator(), &app_);
 
       engine_->SetCallbackUserdata(this);
       engine_->SetOnInitialize(OnInitializeFn);
@@ -32,165 +28,164 @@ namespace blowbox
     }
 
     //------------------------------------------------------------------------------------------------------
-    Editor::~Editor()
+    ClientRuntime::~ClientRuntime()
     {
-      core::Memory::Destruct(main_window_);
       core::Memory::Destruct(engine_);
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::Run()
+    void ClientRuntime::Run()
     {
       engine_->Run();
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::Shutdown()
+    void ClientRuntime::Shutdown()
     {
       engine_->Shutdown();
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnInitialize()
-    {
-      main_window_->show();
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnBeginFrame()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnPreUpdate()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnUpdate()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnFixedUpdate()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnPostUpdate()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnPreRender()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnRender()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnPostRender()
-    {
-
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnEndFrame()
-    {
-      app_.processEvents();
-    }
-
-    //------------------------------------------------------------------------------------------------------
-    void Editor::OnShutdown()
+    void ClientRuntime::OnInitialize()
     {
       
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnInitializeFn(void* userdata)
+    void ClientRuntime::OnBeginFrame()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnInitialize();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnBeginFrameFn(void* userdata)
+    void ClientRuntime::OnPreUpdate()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnBeginFrame();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnPreUpdateFn(void* userdata)
+    void ClientRuntime::OnUpdate()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnPreUpdate();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnUpdateFn(void* userdata)
+    void ClientRuntime::OnFixedUpdate()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnUpdate();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnFixedUpdateFn(void* userdata)
+    void ClientRuntime::OnPostUpdate()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnFixedUpdate();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnPostUpdateFn(void* userdata)
+    void ClientRuntime::OnPreRender()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnPostUpdate();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnPreRenderFn(void* userdata)
+    void ClientRuntime::OnRender()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnPreRender();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnRenderFn(void* userdata)
+    void ClientRuntime::OnPostRender()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnRender();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnPostRenderFn(void* userdata)
+    void ClientRuntime::OnEndFrame()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnPostRender();
+      
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnEndFrameFn(void* userdata)
+    void ClientRuntime::OnShutdown()
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnEndFrame();
+
     }
 
     //------------------------------------------------------------------------------------------------------
-    void Editor::OnShutdownFn(void* userdata)
+    void ClientRuntime::OnInitializeFn(void* userdata)
     {
-      Editor* editor = reinterpret_cast<Editor*>(userdata);
-      editor->OnShutdown();
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnInitialize();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnBeginFrameFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnBeginFrame();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnPreUpdateFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnPreUpdate();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnUpdateFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnUpdate();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnFixedUpdateFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnFixedUpdate();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnPostUpdateFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnPostUpdate();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnPreRenderFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnPreRender();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnRenderFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnRender();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnPostRenderFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnPostRender();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnEndFrameFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnEndFrame();
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void ClientRuntime::OnShutdownFn(void* userdata)
+    {
+      ClientRuntime* client = reinterpret_cast<ClientRuntime*>(userdata);
+      client->OnShutdown();
     }
   }
 }

@@ -1,4 +1,4 @@
-#include "editor/editor.h"
+#include "editor/editor_runtime.h"
 
 #include <core/memory/memory.h>
 
@@ -6,11 +6,9 @@ using namespace blowbox;
 
 int main(int argc, char** argv)
 {
-  editor::Editor* editor = core::Memory::Construct<editor::Editor>(&core::Memory::default_allocator(), argc, argv);
+  editor::EditorRuntime editor(argc, argv);
 
-  editor->Run();
-
-  core::Memory::Destruct(editor);
+  editor.Run();
 
   return 0;
 }
