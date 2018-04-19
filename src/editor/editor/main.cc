@@ -19,13 +19,15 @@ void OnInitialize(void* userdata)
 
   editor::MainWindow* window = new editor::MainWindow(&app_data->app);
   window->show();
+
+  core::Logger::Assert(false, "release test");
 }
 
 void OnUpdate(void* userdata)
 {
-  core::Logger::Log(core::MessageSource::Editor, "This is a log");
-  core::Logger::Warn(core::MessageSource::Editor, "This is a warning");
-  core::Logger::Error(core::MessageSource::Editor, "This is a error");
+  //core::Logger::Log(core::MessageSource::Editor, "This is a log");
+  //core::Logger::Warn(core::MessageSource::Editor, "This is a warning");
+  //core::Logger::Error(core::MessageSource::Editor, "This is a error");
 }
 
 void OnEndFrame(void* userdata)

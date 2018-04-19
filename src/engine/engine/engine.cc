@@ -20,12 +20,15 @@ namespace blowbox
     //------------------------------------------------------------------------------------------------------
     Engine::~Engine()
     {
+      core::Logger::Assert(is_running_ == false, "Tried destructing the Engine instance while it is still running. Call Engine::Shutdown() before destructing the Engine instance.");
 
+      instance_ = nullptr;
     }
 
     //------------------------------------------------------------------------------------------------------
     Engine& Engine::Instance()
     {
+      core::Logger::Assert(instance_ != nullptr, "Tried retrieving the instance of the engine, but there is no instance alive yet.");
       return *instance_;
     }
     
@@ -42,9 +45,9 @@ namespace blowbox
 
         ExecuteCallbackSafely(callback_on_pre_update_, callback_userdata_);
         ExecuteCallbackSafely(callback_on_update_, callback_userdata_);
-        ExecuteCallbackSafely(callback_on_post_update_, callback_userdata_);
 
         ExecuteCallbackSafely(callback_on_fixed_update_, callback_userdata_);
+        ExecuteCallbackSafely(callback_on_post_update_, callback_userdata_);
 
         ExecuteCallbackSafely(callback_on_pre_render_, callback_userdata_);
         ExecuteCallbackSafely(callback_on_render_, callback_userdata_);
@@ -69,7 +72,7 @@ namespace blowbox
     }
 
     //------------------------------------------------------------------------------------------------------
-    void* Engine::GetCallbackUserdata()
+    void* Engine::GetCallbackUserdata() const
     {
       return callback_userdata_;
     }
