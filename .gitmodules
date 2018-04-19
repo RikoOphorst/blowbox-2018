@@ -16,3 +16,6 @@
 [submodule "deps/filesystem"]
 	path = deps/filesystem
 	url = https://github.com/wjakob/filesystem
+[submodule "deps/tclap"]
+	path = deps/tclap
+	url = https://github.com/eile/tclap
