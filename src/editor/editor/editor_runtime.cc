@@ -5,6 +5,7 @@
 #include <core/logger.h>
 #include <core/memory/memory.h>
 #include <engine/engine.h>
+#include <engine/services/config_service.h>
 
 namespace blowbox
 {
@@ -12,9 +13,11 @@ namespace blowbox
   {
     //------------------------------------------------------------------------------------------------------
     EditorRuntime::EditorRuntime(int argc, char** argv) :
-      app_(argc, argv)
+      argc_(argc),
+      argv_(argv),
+      app_(argc_, argv_)
     {
-      engine_ = core::Memory::Construct<engine::Engine>(&core::Memory::default_allocator(), argc, argv);
+      engine_ = core::Memory::Construct<engine::Engine>(&core::Memory::default_allocator());
       main_window_ = core::Memory::Construct<MainWindow>(&core::Memory::default_allocator(), &app_);
 
       engine_->SetCallbackUserdata(this);
@@ -41,7 +44,7 @@ namespace blowbox
     //------------------------------------------------------------------------------------------------------
     void EditorRuntime::Run()
     {
-      engine_->Run();
+      engine_->Run(argc_, argv_);
     }
 
     //------------------------------------------------------------------------------------------------------

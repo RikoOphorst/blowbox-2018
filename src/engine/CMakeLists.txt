@@ -3,15 +3,25 @@ file(GLOB EngineFiles
   engine/*.cc
 )
 
-source_group("engine" FILES ${EngineFiles})
+file(GLOB EngineServicesFiles 
+  engine/services/*.h
+  engine/services/*.cc
+)
 
-add_library(blowbox-engine STATIC ${EngineFiles})
+source_group("engine" FILES ${EngineFiles})
+source_group("engine\\services" FILES ${EngineServicesFiles})
+
+add_library(blowbox-engine STATIC 
+  ${EngineFiles}
+  ${EngineServicesFiles}
+)
 
 target_link_libraries(blowbox-engine PRIVATE
   blowbox-core 
   blowbox-graphics 
   blowbox-scripting 
   blowbox-builder
+  itclap
 )
 
 target_include_directories(blowbox-engine PRIVATE 

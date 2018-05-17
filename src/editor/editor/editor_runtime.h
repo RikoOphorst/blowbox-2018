@@ -104,6 +104,15 @@ namespace blowbox
       */
       void OnShutdown();
 
+    private:
+      int argc_;
+      char** argv_;
+
+      engine::Engine* engine_; //!< The engine::Engine instance is stored here.
+      MainWindow* main_window_; //!< The editor::MainWindow instance is stored here.
+      QApplication app_; //!< The QApplication instance of the EditorRuntime.
+
+    private:
       /**
       * @brief The OnInitialize function that will be set on the core::Engine.
       * @param[in] userdata The custom userdata pointer we set, which is a pointer to the instance of the editor::EditorRuntime.
@@ -169,11 +178,6 @@ namespace blowbox
       * @param[in] userdata The custom userdata pointer we set, which is a pointer to the instance of the editor::EditorRuntime.
       */
       static void OnShutdownFn(void* userdata);
-
-    private:
-      engine::Engine* engine_; //!< The engine::Engine instance is stored here.
-      MainWindow* main_window_; //!< The editor::MainWindow instance is stored here.
-      QApplication app_; //!< The QApplication instance of the EditorRuntime.
     };
   }
 }

@@ -9,9 +9,11 @@ namespace blowbox
   namespace client
   {
     //------------------------------------------------------------------------------------------------------
-    ClientRuntime::ClientRuntime(int argc, char** argv)
+    ClientRuntime::ClientRuntime(int argc, char** argv) :
+      argc_(argc),
+      argv_(argv)
     {
-      engine_ = core::Memory::Construct<engine::Engine>(&core::Memory::default_allocator(), argc, argv);
+      engine_ = core::Memory::Construct<engine::Engine>(&core::Memory::default_allocator());
 
       engine_->SetCallbackUserdata(this);
       engine_->SetOnInitialize(OnInitializeFn);
@@ -36,7 +38,7 @@ namespace blowbox
     //------------------------------------------------------------------------------------------------------
     void ClientRuntime::Run()
     {
-      engine_->Run();
+      engine_->Run(argc_, argv_);
     }
 
     //------------------------------------------------------------------------------------------------------

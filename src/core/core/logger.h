@@ -77,9 +77,20 @@ namespace blowbox
     public:
       static eastl::function<void(void*, const Message&)> message_receiver; //!< Callback that gets called when messages get logged.
       static void* message_receiver_userdata; //!< The userdata pointer that gets supplied to the message_receiver callback.
+      
+      /**
+      * @brief Any message that has a verbosity lower than or equal to this verbosity level value will be logged.
+      * @remarks 0-10     = highest priority, lowest verbosity.
+      * @remarks 10-20    = high priority, low verbosity.
+      * @remarks 20-30    = medium priority, medium verbosity.
+      * @remarks 40-50    = low priority, high verbosity.
+      * @remarks 50+      = lowest priority, highest verbosity.
+      */
+      static unsigned int verbosity_level;
 
       /**
       * @brief Adds a Message to the Logger of type MessageType::Log.
+      * @param[in] verbosity The verbosity of this message. Lower is less verbose and thus more likely to be logged, higher is more verbose and less likely to be logged.
       * @param[in] source The source of the message.
       * @param[in] message The message that should be logged.
       * @param[in] arguments Variable number arguments of any type.
@@ -88,10 +99,11 @@ namespace blowbox
       * @remarks The message gets sprintf_s'd using the arguments you supply.
       */
       template<typename ... Args>
-      static void Log(const MessageSource& source, const String& message, Args&&... arguments);
+      static void Log(unsigned int verbosity, const MessageSource& source, const char* message, Args&&... arguments);
 
       /**
       * @brief Adds a Message to the Logger of type MessageType::Warning.
+      * @param[in] verbosity The verbosity of this message. Lower is less verbose and thus more likely to be logged, higher is more verbose and less likely to be logged.
       * @param[in] source The source of the message.
       * @param[in] message The message that should be logged.
       * @param[in] arguments Variable number arguments of any type.
@@ -100,10 +112,11 @@ namespace blowbox
       * @remarks The message gets sprintf_s'd using the arguments you supply.
       */
       template<typename ... Args>
-      static void Warn(const MessageSource& source, const String& message, Args&&... arguments);
+      static void Warn(unsigned int verbosity, const MessageSource& source, const char* message, Args&&... arguments);
 
       /**
       * @brief Adds a Message to the Logger of type MessageType::Error.
+      * @param[in] verbosity The verbosity of this message. Lower is less verbose and thus more likely to be logged, higher is more verbose and less likely to be logged.
       * @param[in] source The source of the message.
       * @param[in] message The message that should be logged.
       * @param[in] arguments Variable number arguments of any type.
@@ -112,10 +125,11 @@ namespace blowbox
       * @remarks The message gets sprintf_s'd using the arguments you supply.
       */
       template<typename ... Args>
-      static void Error(const MessageSource& source, const String& message, Args&&... arguments);
+      static void Error(unsigned int verbosity, const MessageSource& source, const char* message, Args&&... arguments);
 
       /**
       * @brief Acts as the defacto way of doing Asserts in blowbox. If the evaluation is false, a debug break is called.
+      * @param[in] verbosity The verbosity of this message. Lower is less verbose and thus more likely to be logged, higher is more verbose and less likely to be logged.
       * @param[in] evaluation The evaluation you want to assert to be true.
       * @param[in] message The message that should be logged in case the assert fails..
       * @param[in] arguments Variable number arguments of any type.
@@ -123,13 +137,18 @@ namespace blowbox
       *
       * @remarks The message gets sprintf_s'd using the arguments you supply.
       * @remarks In Release, this function still runs the check, however it does not cause a debug break.
+      * @remarks Technically it does not make sense for asserts to have a verbosity level associated with them, since
+      *          you will always want an assert to log in case it fails. However, it is possible to set a verbosity
+      *          level for an assertion, in case you only want it to log under certain higher levels of verbosity. If
+      *          you wish to always log the assert (you probably do!), you should use a verbosity of 0.
       */
       template<typename ... Args>
-      static void Assert(bool evaluation, const String& message, Args&&... arguments);
+      static void Assert(unsigned int verbosity, bool evaluation, const char* message, Args&&... arguments);
 
     private:
       /**
       * @brief Adds a Message of a certain type and certain source.
+      * @param[in] verbosity The verbosity of this message. Lower is less verbose and thus more likely to be logged, higher is more verbose and less likely to be logged.
       * @param[in] type The type of message.
       * @param[in] source The source of the message.
       * @param[in] message The message that should be logged.
@@ -137,37 +156,37 @@ namespace blowbox
       * @tparam Args Variable number of arguments of any type.
       */
       template<typename ... Args>
-      static void AddMessage(const MessageType& type, const MessageSource& source, const String& message, Args&&... arguments);
+      static void AddMessage(unsigned int verbosity, const MessageType& type, const MessageSource& source, const char* message, Args&&... arguments);
     };
 
     //------------------------------------------------------------------------------------------------------
     template<typename ...Args>
-    inline void Logger::Log(const MessageSource& source, const String& message, Args&&... arguments)
+    inline void Logger::Log(unsigned int verbosity, const MessageSource& source, const char* message, Args&&... arguments)
     {
-      Logger::AddMessage(MessageType::Log, source, message, arguments...);
+      Logger::AddMessage(verbosity, MessageType::Log, source, message, arguments...);
     }
 
     //------------------------------------------------------------------------------------------------------
     template<typename ...Args>
-    inline void Logger::Warn(const MessageSource& source, const String& message, Args&&... arguments)
+    inline void Logger::Warn(unsigned int verbosity, const MessageSource& source, const char* message, Args&&... arguments)
     {
-      Logger::AddMessage(MessageType::Warning, source, message, arguments...);
+      Logger::AddMessage(verbosity, MessageType::Warning, source, message, arguments...);
     }
 
     //------------------------------------------------------------------------------------------------------
     template<typename ...Args>
-    inline void Logger::Error(const MessageSource& source, const String& message, Args&&... arguments)
+    inline void Logger::Error(unsigned int verbosity, const MessageSource& source, const char* message, Args&&... arguments)
     {
-      Logger::AddMessage(MessageType::Error, source, message, arguments...);
+      Logger::AddMessage(verbosity, MessageType::Error, source, message, arguments...);
     }
 
     //------------------------------------------------------------------------------------------------------
     template<typename ... Args>
-    inline void Logger::Assert(bool evaluation, const String& message, Args&&... arguments)
+    inline void Logger::Assert(unsigned int verbosity, bool evaluation, const char* message, Args&&... arguments)
     {
       if (!evaluation)
       {
-        Logger::AddMessage(MessageType::Assert, MessageSource::Unknown, message, arguments...);
+        Logger::AddMessage(verbosity, MessageType::Assert, MessageSource::Unknown, message, arguments...);
 
 #ifdef _DEBUG
         EASTL_DEBUG_BREAK();
@@ -177,19 +196,22 @@ namespace blowbox
 
     //------------------------------------------------------------------------------------------------------
     template<typename ...Args>
-    inline void Logger::AddMessage(const MessageType& type, const MessageSource& source, const String& message, Args&& ...arguments)
+    inline void Logger::AddMessage(unsigned int verbosity, const MessageType& type, const MessageSource& source, const char* message, Args&& ...arguments)
     {
-      Message msg;
-
-      msg.time_stamp = std::chrono::system_clock::now();
-      msg.type = type;
-      msg.source = source;
-      
-      sprintf_s(msg.message, sizeof(Message::message), message.c_str(), arguments...);
-
-      if (Logger::message_receiver)
+      if (verbosity <= verbosity_level)
       {
-        Logger::message_receiver(Logger::message_receiver_userdata, msg);
+        Message msg;
+
+        msg.time_stamp = std::chrono::system_clock::now();
+        msg.type = type;
+        msg.source = source;
+
+        sprintf_s(msg.message, sizeof(Message::message), message, arguments...);
+
+        if (Logger::message_receiver)
+        {
+          Logger::message_receiver(Logger::message_receiver_userdata, msg);
+        }
       }
     }
   }

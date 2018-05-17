@@ -93,3 +93,7 @@ target_include_directories(idirectx11 INTERFACE ${DirectX11_INCLUDE_DIRS})
 # Filesystem
 add_library(ifilesystem INTERFACE)
 target_include_directories(ifilesystem INTERFACE "filesystem")
+
+# TCLAP
+add_library(itclap INTERFACE)
+target_include_directories(itclap INTERFACE "tclap/include")

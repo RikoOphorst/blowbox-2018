@@ -1,5 +1,7 @@
 #include "core/memory/memory.h"
+
 #include "core/memory/pointer_math.h"
+#include "core/logger.h"
 
 namespace blowbox
 {
@@ -16,7 +18,7 @@ namespace blowbox
     {
       if (allocator == nullptr)
       {
-        //Logger::Assert(false, "Attempted to allocate memory with a null allocator");
+        Logger::Assert(0, false, "Attempted to allocate memory with a null allocator");
         allocator = &default_allocator_;
       }
 

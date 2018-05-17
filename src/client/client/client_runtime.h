@@ -100,6 +100,13 @@ namespace blowbox
       */
       void OnShutdown();
 
+    private:
+      int argc_;
+      char** argv_;
+
+      engine::Engine* engine_; //!< The engine::Engine instance is stored here.
+
+    private:
       /**
       * @brief The OnInitialize function that will be set on the core::Engine.
       * @param[in] userdata The custom userdata pointer we set, which is a pointer to the instance of the client::ClientRuntime.
@@ -166,8 +173,6 @@ namespace blowbox
       */
       static void OnShutdownFn(void* userdata);
 
-    private:
-      engine::Engine* engine_; //!< The engine::Engine instance is stored here.
     };
   }
 }

@@ -1,6 +1,8 @@
 #include "engine.h"
 
-#include "core/logger.h"
+#include "engine/services/config_service.h"
+
+#include <core/logger.h>
 
 namespace blowbox
 {
@@ -9,10 +11,10 @@ namespace blowbox
     Engine* Engine::instance_ = nullptr;
 
     //------------------------------------------------------------------------------------------------------
-    Engine::Engine(int argc, char** argv) :
+    Engine::Engine() :
       is_running_(false)
     {
-      core::Logger::Assert(instance_ == nullptr, "Tried creating a second Engine instance which is not supported.");
+      core::Logger::Assert(0, instance_ == nullptr, "Tried creating a second Engine instance which is not supported.");
 
       instance_ = this;
     }
@@ -20,7 +22,7 @@ namespace blowbox
     //------------------------------------------------------------------------------------------------------
     Engine::~Engine()
     {
-      core::Logger::Assert(is_running_ == false, "Tried destructing the Engine instance while it is still running. Call Engine::Shutdown() before destructing the Engine instance.");
+      core::Logger::Assert(0, is_running_ == false, "Tried destructing the Engine instance while it is still running. Call Engine::Shutdown() before destructing the Engine instance.");
 
       instance_ = nullptr;
     }
@@ -28,14 +30,20 @@ namespace blowbox
     //------------------------------------------------------------------------------------------------------
     Engine& Engine::Instance()
     {
-      core::Logger::Assert(instance_ != nullptr, "Tried retrieving the instance of the engine, but there is no instance alive yet.");
+      core::Logger::Assert(0, instance_ != nullptr, "Tried retrieving the instance of the engine, but there is no instance alive yet.");
       return *instance_;
     }
     
     //------------------------------------------------------------------------------------------------------
-    void Engine::Run()
+    void Engine::Run(int argc, char** argv)
     {
       is_running_ = true;
+
+      ConfigService* config_service = AddService<ConfigService>();
+      config_service->ParseCLI(argc, argv);
+      core::Logger::verbosity_level = config_service->GetCommandLineConfig().logger_verbosity_level;
+
+      core::Logger::Log(40, core::MessageSource::Engine, "All Services have been initialized successfully.");
 
       ExecuteCallbackSafely(callback_on_initialize_, callback_userdata_);
 
@@ -55,6 +63,8 @@ namespace blowbox
         
         ExecuteCallbackSafely(callback_on_end_frame_, callback_userdata_);
       }
+
+      config_service->Shutdown();
 
       ExecuteCallbackSafely(callback_on_shutdown_, callback_userdata_);
     }

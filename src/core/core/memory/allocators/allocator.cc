@@ -1,5 +1,7 @@
 #include "allocator.h"
 
+#include "core/logger.h"
+
 namespace blowbox
 {
   namespace core
@@ -28,7 +30,7 @@ namespace blowbox
     //------------------------------------------------------------------------------------------------------
     Allocator::~Allocator()
     {
-      //assert(open_allocations_ == 0 && allocated_ == 0 && "Memory leak detected in an allocator");
+      Logger::Assert(0, open_allocations_ == 0 && allocated_ == 0, "Memory leak detected in an allocator");
     }
 
     //------------------------------------------------------------------------------------------------------
@@ -36,7 +38,7 @@ namespace blowbox
     {
       if (allocated_ + size > max_size_)
       {
-        //Logger::Assert(false, "Buffer overflow in allocator");
+        Logger::Assert(0, false, "Buffer overflow in allocator");
         return nullptr;
       }
 
@@ -53,7 +55,7 @@ namespace blowbox
 
       if (max_size_ < deallocated)
       {
-        //Logger::Assert(false, "Attempted to deallocate more than was ever allocated");
+        Logger::Assert(0, false, "Attempted to deallocate more than was ever allocated");
         return 0;
       }
 

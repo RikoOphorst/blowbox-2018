@@ -1,5 +1,9 @@
 #pragma once
 
+#include "engine/services/iservice.h"
+
+#include <core/memory/memory.h>
+#include <core/data/vector.h>
 #include <core/data/functional.h>
 
 namespace blowbox
@@ -40,10 +44,8 @@ namespace blowbox
     public:
       /**
       * @brief Constructs the Engine. Does not run it immediately.
-      * @param[in] argc The number of command line arguments.
-      * @param[in] argv A char* array of command line arguments values.
       */
-      Engine(int argc = 0, char** argv = nullptr);
+      Engine();
       
       /**
       * @brief Destructs the Engine. 
@@ -59,17 +61,54 @@ namespace blowbox
 
       /**
       * @brief Initializes all the systems in the engine and starts running the gameloop.
-      * @remarks This function is blocking.
+      * @param[in] argc The number of command line arguments (received in your main() method).
+      * @param[in] argv A char* array of command line arguments values (received in your main() method).
+      * @remarks This function is blocking until the engine is shutdown via Engine::Shutdown().
       * @remarks You can set callbacks for specific events that happen during Engine runtime by using the various Engine::SetOn* functions.
       * @remarks You can set a custom userdata pointer by calling Engine::SetCalllbackUserdata() which gets sent to every callback.
       * @remarks You should set all your callbacks before calling Engine::Run(), although it is possible to modify them later on during engine runtime.
       */
-      void Run();
+      void Run(int argc = 0, char** argv = nullptr);
 
       /**
       * @brief Shuts down the entire engine as soon as it has finished the current frame.
       */
       void Shutdown();
+
+      /**
+      * @brief Returns the instance of a given service T.
+      * @remarks T must be derived from an IService.
+      */
+      template<typename T>
+      T* GetService();
+
+      /**
+      * @brief Adds a service of type T.
+      * @remarks T must be derived from an IService.
+      * @returns The instance of the service of type T.
+      */
+      template<typename T, typename ... Args>
+      T* AddService();
+
+    private:
+      bool is_running_; //!< Flag that defines whether the engine is currently running or not.
+
+      void* callback_userdata_;                         //!< The custom user data pointer that gets passed into all callback functions.
+      CallbackOnInitialize  callback_on_initialize_;    //!< The custom callback that gets called right after systems have been initialized.
+      CallbackOnBeginFrame  callback_on_begin_frame_;   //!< The custom callback that gets called at the very beginning of every frame.
+      CallbackOnPreUpdate   callback_on_pre_update_;    //!< The custom callback that gets called right before engine systems get updated.
+      CallbackOnUpdate      callback_on_update_;        //!< The custom callback that gets called when engine systems are getting updated.
+      CallbackOnFixedUpdate callback_on_fixed_update_;  //!< The custom callback that gets called at a fixed amount of times per second.
+      CallbackOnPostUpdate  callback_on_post_update_;   //!< The custom callback that gets called right after engine systems have been updated, including fixed update.
+      CallbackOnPreRender   callback_on_pre_render_;    //!< The custom callback that gets called right before the engine systems are rendered.
+      CallbackOnRender      callback_on_render_;        //!< The custom callback that gets called when engine systems are getting rendered.
+      CallbackOnPostRender  callback_on_post_render_;   //!< The custom callback that gets called after all systems have been rendered, but not presented to the screen.
+      CallbackOnEndFrame    callback_on_end_frame_;     //!< The custom callback that gets called at the very end of a frame.
+      CallbackOnShutdown    callback_on_shutdown_;      //!< The custom callback that gets called right before the systems in the engine are shutdown.
+
+      Vector<UniquePtr<IServiceBase>> services_;
+
+      static Engine* instance_; //!< The singleton instance of the Engine created by the Engine constructor.
 
     public:
       /**
@@ -81,7 +120,7 @@ namespace blowbox
       /** @return Returns the userdata pointer. */
       void* GetCallbackUserdata() const;
 
-      /** 
+      /**
       * @brief Sets the OnInitialize callback.
       * @param[in] callback The callback to be called.
       * @remarks Callback gets called right after all systems are initialized.
@@ -190,24 +229,33 @@ namespace blowbox
 
       /** @returns The OnShutdown callback. */
       const CallbackOnShutdown& GetOnShutdown() const;
-
-    private:
-      bool is_running_; //!< Flag that defines whether the engine is currently running or not.
-
-      void* callback_userdata_; //!< The custom user data pointer that gets passed into all callback functions.
-      CallbackOnInitialize  callback_on_initialize_;    //!< The custom callback that gets called right after systems have been initialized.
-      CallbackOnBeginFrame  callback_on_begin_frame_;   //!< The custom callback that gets called at the very beginning of every frame.
-      CallbackOnPreUpdate   callback_on_pre_update_;    //!< The custom callback that gets called right before engine systems get updated.
-      CallbackOnUpdate      callback_on_update_;        //!< The custom callback that gets called when engine systems are getting updated.
-      CallbackOnFixedUpdate callback_on_fixed_update_;  //!< The custom callback that gets called at a fixed amount of times per second.
-      CallbackOnPostUpdate  callback_on_post_update_;   //!< The custom callback that gets called right after engine systems have been updated, including fixed update.
-      CallbackOnPreRender   callback_on_pre_render_;    //!< The custom callback that gets called right before the engine systems are rendered.
-      CallbackOnRender      callback_on_render_;        //!< The custom callback that gets called when engine systems are getting rendered.
-      CallbackOnPostRender  callback_on_post_render_;   //!< The custom callback that gets called after all systems have been rendered, but not presented to the screen.
-      CallbackOnEndFrame    callback_on_end_frame_;     //!< The custom callback that gets called at the very end of a frame.
-      CallbackOnShutdown    callback_on_shutdown_;      //!< The custom callback that gets called right before the systems in the engine are shutdown.
-
-      static Engine* instance_; //!< The singleton instance of the Engine created by the Engine constructor.
     };
+    
+    //------------------------------------------------------------------------------------------------------
+    template<typename T>
+    inline T* Engine::GetService()
+    {
+      static_assert(eastl::is_base_of<IServiceBase, T>::value, "T must inherit from IService.");
+
+      size_t id = T::GetID();
+      core::Logger::Assert(id < services_.size(), "Tried to a Service with an invalid ID.");
+
+      return static_cast<T*>(services_[id].get());
+    }
+    
+    //------------------------------------------------------------------------------------------------------
+    template<typename T, typename ...Args>
+    inline T* Engine::AddService()
+    {
+      static_assert(eastl::is_base_of<IServiceBase, T>::value, "T must inherit from IService.");
+
+      UniquePtr<T> unique_ptr = core::Memory::ConstructUnique<T>(&core::Memory::default_allocator(), eastl::forward<Args>(args)...);
+
+      T* real_ptr = unique_ptr.get();
+
+      services_.push_back(eastl::move(unique_ptr));
+
+      return real_ptr;
+    }
   }
 }

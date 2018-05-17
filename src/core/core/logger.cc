@@ -6,5 +6,6 @@ namespace blowbox
   {
     eastl::function<void(void*, const Message&)> Logger::message_receiver = eastl::function<void(void*, const Message&)>();
     void* Logger::message_receiver_userdata = nullptr;
+    unsigned int Logger::verbosity_level = 25;
   }
 }
