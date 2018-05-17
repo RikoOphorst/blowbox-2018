@@ -1,6 +1,7 @@
 #include "engine.h"
 
 #include "engine/services/config_service.h"
+#include "engine/services/script_service.h"
 
 #include <core/logger.h>
 
@@ -39,11 +40,7 @@ namespace blowbox
     {
       is_running_ = true;
 
-      ConfigService* config_service = AddService<ConfigService>();
-      config_service->ParseCLI(argc, argv);
-      core::Logger::verbosity_level = config_service->GetCommandLineConfig().logger_verbosity_level;
-
-      core::Logger::Log(40, core::MessageSource::Engine, "All Services have been initialized successfully.");
+      InitializeServices(argc, argv);
 
       ExecuteCallbackSafely(callback_on_initialize_, callback_userdata_);
 
@@ -64,7 +61,7 @@ namespace blowbox
         ExecuteCallbackSafely(callback_on_end_frame_, callback_userdata_);
       }
 
-      config_service->Shutdown();
+      ShutdownServices();
 
       ExecuteCallbackSafely(callback_on_shutdown_, callback_userdata_);
     }
@@ -73,6 +70,33 @@ namespace blowbox
     void Engine::Shutdown()
     {
       is_running_ = false;
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void Engine::InitializeServices(int argc, char** argv)
+    {
+      core::Logger::Log(30, core::MessageSource::Engine, "Initializing all Services..");
+
+      ConfigService* config_service = AddService<ConfigService>();
+      config_service->Initialize();
+      config_service->ParseCLI(argc, argv);
+      core::Logger::verbosity_level = config_service->GetCommandLineConfig().logger_verbosity_level;
+
+      ScriptService* script_service = AddService<ScriptService>();
+      script_service->Initialize();
+
+      core::Logger::Log(30, core::MessageSource::Engine, "All Services have been initialized.");
+    }
+
+    //------------------------------------------------------------------------------------------------------
+    void Engine::ShutdownServices()
+    {
+      core::Logger::Log(30, core::MessageSource::Engine, "Shutting down all Services..");
+
+      GetService<ScriptService>()->Shutdown();
+      GetService<ConfigService>()->Shutdown();
+
+      core::Logger::Log(30, core::MessageSource::Engine, "All Services have been shutdown.");
     }
     
     //------------------------------------------------------------------------------------------------------

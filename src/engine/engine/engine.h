@@ -91,6 +91,19 @@ namespace blowbox
       T* AddService();
 
     private:
+      /** 
+      * @brief Initializes all Services.
+      * @param[in] argc The number of command line arguments (received in your main() method).
+      * @param[in] argv A char* array of command line arguments values (received in your main() method).
+      */
+      void InitializeServices(int argc, char** argv);
+
+      /**
+      * @brief Shuts down all Services.
+      */
+      void ShutdownServices();
+
+    private:
       bool is_running_; //!< Flag that defines whether the engine is currently running or not.
 
       void* callback_userdata_;                         //!< The custom user data pointer that gets passed into all callback functions.
@@ -238,7 +251,7 @@ namespace blowbox
       static_assert(eastl::is_base_of<IServiceBase, T>::value, "T must inherit from IService.");
 
       size_t id = T::GetID();
-      core::Logger::Assert(id < services_.size(), "Tried to a Service with an invalid ID.");
+      core::Logger::Assert(0, id < services_.size(), "Tried to get a Service with an invalid ID.");
 
       return static_cast<T*>(services_[id].get());
     }
